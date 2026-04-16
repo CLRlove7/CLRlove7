@@ -11,7 +11,9 @@
 ## 💡 技术方案
 
 ### 1️⃣ 测试义务标注 & TOG 构建
-[脱敏架构图]
+<p align="center">
+  <img src="./assets/image.png" width="800" alt="AssertPath-LLM 架构图" />
+</p>
 源码 → AST/CFG/DDG 多视图融合 → 红边标注测试义务点 → Test-Oriented Graph
 
 ### 2️⃣ 最小线性子路径分解（MLSP）
