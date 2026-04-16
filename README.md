@@ -1,4 +1,4 @@
-# 👋 Hi, I'm CLR | Lin
+# 👋 Hi, I'm CLR 
 
 🎓 电子科技大学 电子信息硕士（985）｜🔍 求职：AI应用/后端开发实习  
 📍 成都 | 📧 524324742@qq.com 
@@ -56,10 +56,6 @@
 
 ---
 
-## 📫 联系我
 
-[![Email](https://img.shields.io/badge/-Email-D14836?style=flat-square&logo=gmail&logoColor=white)](mailto:524324742@qq.com)
-[![LinkedIn](https://img.shields.io/badge/-LinkedIn-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](#)
-[![博客](https://img.shields.io/badge/-Blog-000000?style=flat-square&logo=ghost&logoColor=white)](#)
 
-> ✨ 简历完整版：[点击下载 PDF](你的简历链接)
+
