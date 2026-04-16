@@ -42,8 +42,8 @@
 - 符号执行/模糊测试/大模型生成三策略智能分流
 - 领域知识库检索增强，解决航空软件测试知识依赖
 📑 **技术详情**：
-- 🔗 [AssertPath-LLM 断言生成技术报告](./tech-reports/assertion-generation.md)
-- 🔗 [检索生成判别模型专利摘要](./tech-reports/retrieval-rgd.md)
+- 🔗 [AssertPath-LLM 断言生成技术](./tech-reports/assertion-generation.md)
+- 🔗 [检索生成判别模型摘要](./tech-reports/retrieval-rgd.md)
 
 ### 🎓 学无界教育平台
 > 分布式微服务架构，解决高并发与断点续播难题
