@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLR - AI/后端开发</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #007AFF;
+            --secondary: #5856D6;
+            --accent: #FF9500;
+            --bg-dark: #0a0a0f;
+            --bg-card: rgba(255,255,255,0.05);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --tencent-red: #ED1B2D;
+            --tencent-blue: #2E9AFE;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 动态背景 */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(46,154,254,0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(237,27,45,0.1) 0%, transparent 50%),
+                var(--bg-dark);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(46,154,254,0.05) 0%, transparent 25%),
+                radial-gradient(circle at 80% 30%, rgba(237,27,45,0.05) 0%, transparent 25%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        /* 容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* 头部区域 */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3rem 0;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .intro {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .intro h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--tencent-red), var(--tencent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .intro .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .intro .info {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .intro .info span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* 腾讯吉祥物 - 招手的企鹅 */
+        .tencent-mascot {
+            position: relative;
+            width: 180px;
+            height: 200px;
+            cursor: pointer;
+        }
+
+        .penguin-body {
+            position: absolute;
+            width: 120px;
+            height: 150px;
+            background: linear-gradient(180deg, #1a1a2e 0%, #0d0d15 100%);
+            border-radius: 60px 60px 50px 50px;
+            left: 50%;
+            top: 50%;
+            transform: translateX(-50%);
+            overflow: hidden;
+        }
+
+        .penguin-belly {
+            position: absolute;
+            width: 80px;
+            height: 100px;
+            background: linear-gradient(180deg, #ffffff 0%, #f0f0f0 100%);
+            border-radius: 40px 40px 35px 35px;
+            left: 50%;
+            bottom: 10px;
+            transform: translateX(-50%);
+        }
+
+        .penguin-eye {
+            position: absolute;
+            width: 20px;
+            height: 24px;
+            background: #fff;
+            border-radius: 50%;
+            top: 35px;
+        }
+
+        .penguin-eye.left { left: 25px; }
+        .penguin-eye.right { right: 25px; }
+
+        .penguin-pupil {
+            position: absolute;
+            width: 10px;
+            height: 12px;
+            background: #1a1a2e;
+            border-radius: 50%;
+            top: 6px;
+            left: 5px;
+        }
+
+        .penguin-pupil::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            top: 1px;
+            left: 1px;
+        }
+
+        .penguin-beak {
+            position: absolute;
+            width: 25px;
+            height: 18px;
+            background: linear-gradient(180deg, #FF9500 0%, #E68600 100%);
+            border-radius: 0 0 50% 50%;
+            left: 50%;
+            top: 62px;
+            transform: translateX(-50%);
+        }
+
+        .penguin-foot {
+            position: absolute;
+            width: 30px;
+            height: 15px;
+            background: #FF9500;
+            border-radius: 50% 50% 0 0;
+            bottom: -5px;
+        }
+
+        .penguin-foot.left { left: 15px; }
+        .penguin-foot.right { right: 15px; }
+
+        /* 招手的手臂 */
+        .penguin-arm {
+            position: absolute;
+            width: 25px;
+            height: 70px;
+            background: linear-gradient(180deg, #1a1a2e 0%, #0d0d15 100%);
+            border-radius: 12px;
+            top: 70px;
+            transform-origin: top center;
+        }
+
+        .penguin-arm.left {
+            left: 5px;
+            animation: wave-left 1.5s ease-in-out infinite;
+        }
+
+        .penguin-arm.right {
+            right: 5px;
+            animation: wave-right 1.5s ease-in-out infinite;
+        }
+
+        @keyframes wave-left {
+            0%, 100% { transform: rotate(10deg); }
+            50% { transform: rotate(-20deg); }
+        }
+
+        @keyframes wave-right {
+            0%, 100% { transform: rotate(-10deg); }
+            50% { transform: rotate(20deg); }
+        }
+
+        /* 围巾 */
+        .penguin-scarf {
+            position: absolute;
+            width: 130px;
+            height: 20px;
+            background: linear-gradient(90deg, var(--tencent-red), #FF6B6B, var(--tencent-red));
+            top: 85px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 10px;
+            z-index: 2;
+        }
+
+        .penguin-scarf::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 50px;
+            background: linear-gradient(180deg, var(--tencent-red), #FF6B6B);
+            right: -5px;
+            top: 15px;
+            border-radius: 0 0 5px 5px;
+            animation: scarf-wave 2s ease-in-out infinite;
+        }
+
+        @keyframes scarf-wave {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(10deg); }
+        }
+
+        /* 打招呼气泡 */
+        .speech-bubble {
+            position: absolute;
+            background: white;
+            color: #333;
+            padding: 8px 14px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 10px solid white;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-8px); }
+        }
+
+        /* 导航 */
+        nav {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        nav a:hover, nav a.active {
+            background: linear-gradient(135deg, var(--tencent-red), var(--tencent-blue));
+            color: white;
+        }
+
+        /* 技能卡片 */
+        .skills-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .skill-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .skill-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--tencent-blue);
+            box-shadow: 0 10px 40px rgba(46,154,254,0.2);
+        }
+
+        .skill-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background: rgba(46,154,254,0.15);
+            color: var(--tencent-blue);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        /* 项目卡片 */
+        .project-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            border-color: var(--tencent-red);
+            box-shadow: 0 10px 40px rgba(237,27,45,0.15);
+        }
+
+        .project-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .project-card .tag-line {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-tech span {
+            background: rgba(255,149,0,0.15);
+            color: var(--accent);
+            padding: 0.3rem 0.7rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-family: monospace;
+        }
+
+        .project-features {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .project-features li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .project-features li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--tencent-blue);
+        }
+
+        /* 技术文档链接 */
+        .tech-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tech-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--tencent-blue);
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            background: rgba(46,154,254,0.1);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .tech-link:hover {
+            background: var(--tencent-blue);
+            color: white;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 3rem;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .intro h1 { font-size: 2.5rem; }
+            header { flex-direction: column-reverse; text-align: center; }
+            .intro .info { justify-content: center; }
+            .tencent-mascot { width: 150px; height: 170px; }
+            .skill-grid { grid-template-columns: 1fr; }
+        }
+
+        /* 滚动动画 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <div class="container">
+        <!-- 头部 -->
+        <header>
+            <div class="intro">
+                <h1>CLR</h1>
+                <p class="subtitle">电子科技大学 · AI应用/后端开发</p>
+                <div class="info">
+                    <span>📍 成都</span>
+                    <span>📧 524324742@qq.com</span>
+                    <span>🔍 求职：实习</span>
+                </div>
+            </div>
+            
+            <!-- 腾讯吉祥物招手动画 -->
+            <div class="tencent-mascot">
+                <div class="speech-bubble">👋 你好呀！</div>
+                <div class="penguin-body">
+                    <div class="penguin-eye left">
+                        <div class="penguin-pupil"></div>
+                    </div>
+                    <div class="penguin-eye right">
+                        <div class="penguin-pupil"></div>
+                    </div>
+                    <div class="penguin-beak"></div>
+                    <div class="penguin-belly"></div>
+                    <div class="penguin-arm left"></div>
+                    <div class="penguin-arm right"></div>
+                    <div class="penguin-scarf"></div>
+                    <div class="penguin-foot left"></div>
+                    <div class="penguin-foot right"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 导航 -->
+        <nav>
+            <a href="#skills" class="active">技术栈</a>
+            <a href="#projects">核心项目</a>
+            <a href="#research">研究成果</a>
+            <a href="#contact">联系方式</a>
+        </nav>
+
+        <!-- 技术栈 -->
+        <section id="skills" class="skills-section fade-in">
+            <h2 class="section-title">💻 技术栈</h2>
+            
+            <div class="skill-grid">
+                <div class="skill-card">
+                    <h3>🖥️ 后端开发</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">Spring Boot</span>
+                        <span class="skill-tag">Spring Cloud</span>
+                        <span class="skill-tag">MySQL</span>
+                        <span class="skill-tag">Redis</span>
+                        <span class="skill-tag">RabbitMQ</span>
+                    </div>
+                </div>
+
+                <div class="skill-card">
+                    <h3>🤖 AI/大模型</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">LangChain</span>
+                        <span class="skill-tag">RAG</span>
+                        <span class="skill-tag">YOLOv7</span>
+                        <span class="skill-tag">MindSpore</span>
+                    </div>
+                </div>
+
+                <div class="skill-card">
+                    <h3>🛠️ 工具&其他</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Docker</span>
+                        <span class="skill-tag">Linux</span>
+                        <span class="skill-tag">Git</span>
+                        <span class="skill-tag">Kubernetes</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 核心项目 -->
+        <section id="projects" class="fade-in">
+            <h2 class="section-title">🚀 核心项目</h2>
+
+            <div class="project-card fade-in">
+                <h3>🤖 飞控软件测试 Agent</h3>
+                <p class="tag-line">基于 ReAct + RAG + 多策略协同的高可靠软件测试智能体</p>
+                <div class="project-tech">
+                    <span>Python</span>
+                    <span>LangChain</span>
+                    <span>RAG</span>
+                    <span>ReAct</span>
+                    <span>OpenAI API</span>
+                </div>
+                <ul class="project-features">
+                    <li><strong>Supervisor-Agent 协同架构</strong>：任务分解 + LLM 路由调度</li>
+                    <li><strong>三策略智能分流</strong>：符号执行 / 模糊测试 / 大模型生成</li>
+                    <li><strong>领域知识库检索增强</strong>：解决航空软件测试知识依赖</li>
+                    <li><strong>AssertPath-LLM 断言生成</strong>：结构引导的单元测试断言框架</li>
+                </ul>
+                <div class="tech-links">
+                    <a href="tech-reports/task-decomposition.html" class="tech-link">📋 任务分解策略 →</a>
+                    <a href="tech-reports/llm-generation.html" class="tech-link">🧠 大模型生成策略 →</a>
+                    <a href="tech-reports/retrieval-augmentation.html" class="tech-link">🔍 领域知识库检索 →</a>
+                </div>
+            </div>
+
+            <div class="project-card fade-in">
+                <h3>🎓 学无界教育平台</h3>
+                <p class="tag-line">分布式微服务架构，解决高并发与断点续播难题</p>
+                <div class="project-tech">
+                    <span>SpringCloud</span>
+                    <span>Redis</span>
+                    <span>RabbitMQ</span>
+                    <span>MySQL</span>
+                </div>
+                <ul class="project-features">
+                    <li>断点续播误差 < 30s，优化流媒体传输策略</li>
+                    <li>分布式锁解决优惠券超卖，保障数据一致性</li>
+                    <li>Redis 缓存击穿防护与热点数据预加载</li>
+                </ul>
+            </div>
+
+            <div class="project-card fade-in">
+                <h3>👁️ 驾驶视觉辅助系统</h3>
+                <p class="tag-line">YOLOv7 + MindSpore 边缘端部署</p>
+                <div class="project-tech">
+                    <span>YOLOv7</span>
+                    <span>MindSpore</span>
+                    <span>OpenCV</span>
+                </div>
+                <ul class="project-features">
+                    <li>复杂光照下信号灯识别准确率 99.3%</li>
+                    <li>车道线检测 mAP 达 90.4%</li>
+                    <li>边缘端模型量化加速，推理延迟 < 15ms</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 研究成果 -->
+        <section id="research" class="fade-in">
+            <h2 class="section-title">📚 研究成果</h2>
+            
+            <div class="skill-grid">
+                <div class="skill-card">
+                    <h3>📄 论文发表</h3>
+                    <ul class="project-features">
+                        <li><strong>AssertPath</strong> - 结构引导的大模型单元测试断言生成方法</li>
+                        <li>CCF-C 类会议待投</li>
+                    </ul>
+                </div>
+
+                <div class="skill-card">
+                    <h3>💡 专利申请</h3>
+                    <ul class="project-features">
+                        <li><strong>专利1</strong>：一种基于大模型的单元测试方法</li>
+                        <li><strong>专利2</strong>：一种基于检索生成判别模型的单元测试方法</li>
+                    </ul>
+                </div>
+
+                <div class="skill-card">
+                    <h3>📊 技术报告</h3>
+                    <ul class="project-features">
+                        <li><a href="tech-reports/assertion-generation.html">AssertPath-LLM 断言生成框架</a></li>
+                        <li><a href="tech-reports/retrieval-rgd.html">检索生成判别模型 (RGD)</a></li>
+                        <li><a href="tech-reports/task-decomposition.html">多级任务分解策略</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 联系方式 -->
+        <footer id="contact">
+            <p>📧 524324742@qq.com</p>
+            <p style="margin-top: 1rem; font-size: 0.85rem;">
+                Made with ❤️ | 腾讯吉祥物陪你探索代码世界
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // 滚动动画
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 导航高亮
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('nav a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // 企鹅点击交互
+        document.querySelector('.tencent-mascot').addEventListener('click', function() {
+            const bubble = this.querySelector('.speech-bubble');
+            const messages = ['👋 加油!', '🚀 写代码去!', '💡 有创意!', '🎉 真棒!', '🔥 继续!'];
+            bubble.textContent = messages[Math.floor(Math.random() * messages.length)];
+        });
+    </script>
+</body>
+</html>
