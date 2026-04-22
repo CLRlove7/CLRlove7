@@ -1,10 +1,17 @@
+
+
 # 👋 Hi, I'm CLR 
 
 🎓 电子科技大学｜🔍 求职：AI应用/后端开发实习  
 📍 成都 | 📧 524324742@qq.com 
 
 ---
-
+<div align="center">
+  <h3>🌐 访问我的完整个人网站</h3>
+  <a href="https://clrlove7.github.io/CLRlove7/" target="_blank">
+    <img src="https://img.shields.io/badge/🚀_点击访问-完整个人主页-2ea44f?style=for-the-badge" alt="访问主页">
+  </a>
+</div>
 ## 💻 技术栈
 
 <div align="center" style="margin: 15px 0;">
