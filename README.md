@@ -37,13 +37,16 @@
 ## 🚀 核心项目
 ### 🤖 飞控软件测试 Agent
 > 基于 ReAct+RAG+多策略协同的高可靠软件测试智能体
-🔧 **技术栈**：\`Python\` · \`LangChain\` · \`RAG\` · \`ReAct\` · \`OpenAI API
+🔧 **技术栈**：\`Python\` · \`LangChain\` · \`RAG\` · \`ReAct\` · \`OpenAI API\`
 - Supervisor-Agent 协同架构，任务分解+LLM 路由调度
 - 符号执行/模糊测试/大模型生成三策略智能分流
 - 领域知识库检索增强，解决航空软件测试知识依赖
 📑 **技术详情**：
 - 🔗 [AssertPath-LLM 断言生成技术](./tech-reports/assertion-generation.md)
 - 🔗 [检索生成判别模型摘要](./tech-reports/retrieval-rgd.md)
+- 🔗 [多级任务分解策略](./tech-reports/task-decomposition.md) 
+- 🔗 [大模型生成策略](./tech-reports/llm-generation.md) 
+- 🔗 [领域知识库检索增强](./tech-reports/retrieval-augmentation.md) 
 
 ### 🎓 学无界教育平台
 > 分布式微服务架构，解决高并发与断点续播难题
@@ -62,6 +65,30 @@
 
 ---
 
+---
+
+## 📚 研究成果
+
+### 📄 论文发表
+- **AssertPath** - 结构引导的大模型单元测试断言生成方法 
+
+### 💡 专利申请
+- 一种基于大模型的单元测试方法
+- 一种基于检索生成判别模型的单元测试方法
+
+### 📊 技术报告
+- [AssertPath-LLM 断言生成框架](./tech-reports/assertion-generation.md)
+- [检索生成判别模型 (RGD)](./tech-reports/retrieval-rgd.md)
+- [多级任务分解策略](./tech-reports/task-decomposition.md) ✨NEW
+- [大模型生成策略](./tech-reports/llm-generation.md) ✨NEW
+- [领域知识库检索增强](./tech-reports/retrieval-augmentation.md) ✨NEW
+
+---
+
+## 🌐 在线预览
+
+**欢迎访问我的 GitHub Pages 个人主页**（包含腾讯吉祥物招手动画✨）：
+> 打开 `index.html` 文件预览完整效果
 
 
 
